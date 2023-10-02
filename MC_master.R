@@ -9,9 +9,9 @@ library(writexl) # to save results
 library(readxl)
 
 # function to get summary stats
-source("https://raw.githubusercontent.com/birdcountindia/bci-functions/main/summaries.R")
+source("https://raw.githubusercontent.com/birdcountindia/bci-functions/main/01_functions/summaries.R")
 
-###### automated parameters ####
+# automated parameters ####
 
 # paths to latest versions of user & GA info, and sensitive species data
 load(url("https://github.com/birdcountindia/ebird-datasets/raw/main/EBD/latest_non-EBD_paths.RData"))
@@ -19,13 +19,28 @@ userspath <- glue("../ebird-datasets/{userspath}")
 groupaccspath <- glue("../ebird-datasets/{groupaccspath}")
 senspath <- glue("../ebird-datasets/{senspath}")
 
-cur_year <- today() %>% year()
-cur_month_num <- today() %>% month()
-cur_month_lab <- today() %>% month(label = T, abbr = T)
+cur_date <- if (today() %>% day() < 16) { 
+  (today() - months(1)) %>% floor_date(unit = "month")
+} else {
+  today() %>% floor_date(unit = "month")
+}
 
-rel_year <- (today() - months(1)) %>% year()
-rel_month_num <- (today() - months(1)) %>% month()
-rel_month_lab <- (today() - months(1)) %>% month(label = T, abbr = T) 
+rel_date <- if (today() %>% day() < 16) {
+  ((today() - months(1)) - months(1)) %>%
+    floor_date(unit = "month")
+} else {
+  (today() - months(1)) %>%
+    floor_date(unit = "month")
+}
+
+cur_year <- cur_date %>% year()
+cur_month_num <- cur_date %>% month()
+cur_month_lab <- cur_date %>% month(label = T, abbr = T)
+
+rel_year <- rel_date %>% year()
+rel_month_num <- rel_date %>% month()
+rel_month_lab <- rel_date %>% month(label = T, abbr = T) 
+
 
 mcdatapath <-  glue("../ebird-datasets/EBD/ebd_IN_rel{rel_month_lab}-{rel_year}_{toupper(rel_month_lab)}.RData")
 mcresultspath <- glue("{rel_year}/MC_results_{rel_year}_{str_pad(rel_month_num, width=2, pad='0')}.xlsx")
@@ -36,7 +51,7 @@ ycdatapath <-  glue("../ebird-datasets/EBD/ebd_IN_rel{rel_month_lab}-{rel_year}_
 ycresultspath <- glue("{rel_year}/YC_results_{rel_year}.xlsx")
 ycpath <- glue("{rel_year}/YC_{rel_year}.R")
 
-###### loading data ####
+# loading data ####
 
 # month's data
 load(mcdatapath)
@@ -61,15 +76,15 @@ filtGA <- groupaccs %>%
   select(OBSERVER.ID)
 
 
-###### monthly stats ####
+# monthly stats ####
 
 stats <- basic_stats(data_mc)
 
-###### monthly challenge winners/results ####
+# monthly challenge winners/results ####
 
 source(mcpath)
 
-###### saving results into excel sheet ####
+# saving results into excel sheet ####
 
 write_xlsx(x = list("Monthly stats" = stats, 
                     "Challenge results" = results, 
@@ -77,7 +92,7 @@ write_xlsx(x = list("Monthly stats" = stats,
            path = mcresultspath)
 
 
-###### yearly stats (if January) ####
+# yearly stats (if January) ####
 
 if (cur_month_num == 1 & exists("data_yc")) {
   
@@ -89,7 +104,7 @@ if (cur_month_num == 1 & exists("data_yc")) {
   
 }
 
-###### yearly challenge winners/results ####
+# yearly challenge winners/results ####
 
 if (cur_month_num == 1 & exists("data_yc")) {
   
@@ -139,7 +154,7 @@ if (cur_month_num == 1 & exists("data_yc")) {
   
 }
 
-###### saving results into excel sheet ####
+# saving results into excel sheet ####
 
 if (cur_month_num == 1 & exists("data_yc")) {
   
