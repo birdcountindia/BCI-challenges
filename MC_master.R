@@ -174,3 +174,6 @@ if (cur_month_num == 1 & exists("data_yc")) {
              path = ycresultspath)
   
 }
+# announce (print) results in console -----------------------------------------------
+
+print(winner_mc_announcement)
