@@ -33,7 +33,7 @@ results <- data1 %>%
 # random selection 
 a <- results %>% 
   filter(FULL.NAME != "MetalClicks Ajay Ashok") # removes NAs too
-set.seed(10)
+set.seed(1)
 winner <- a %>% slice_sample(n = 1) %>% select(FULL.NAME)
 
 winner_mc_announcement <- glue("Monthly challenge winner is {winner}")
