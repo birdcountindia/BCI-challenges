@@ -7,6 +7,7 @@ library(magrittr)
 library(glue)
 library(writexl) # to save results
 library(readxl)
+library(skimmr)
 
 # function to get summary stats
 source("https://raw.githubusercontent.com/birdcountindia/bci-functions/main/01_functions/summaries.R")
@@ -19,37 +20,18 @@ userspath <- glue("../ebird-datasets/{userspath}")
 groupaccspath <- glue("../ebird-datasets/{groupaccspath}")
 senspath <- glue("../ebird-datasets/{senspath}")
 
-cur_date <- if (today() %>% day() < 16) { 
-  (today() - months(1)) %>% floor_date(unit = "month")
-} else {
-  today() %>% floor_date(unit = "month")
-}
-
-rel_date <- if (today() %>% day() < 16) {
-  ((today() - months(1)) - months(1)) %>%
-    floor_date(unit = "month")
-} else {
-  (today() - months(1)) %>%
-    floor_date(unit = "month")
-}
-
-cur_year <- cur_date %>% year()
-cur_month_num <- cur_date %>% month()
-cur_month_lab <- cur_date %>% month(label = T, abbr = T)
-
-rel_year <- rel_date %>% year()
-rel_month_num <- rel_date %>% month()
-rel_month_lab <- rel_date %>% month(label = T, abbr = T) 
+get_param()
+# get_param(date_currel = "2023-11-01")
 
 
-mcdatapath <-  glue("../ebird-datasets/EBD/ebd_IN_rel{rel_month_lab}-{rel_year}_{toupper(rel_month_lab)}.RData")
-mcresultspath <- glue("{rel_year}/MC_results_{rel_year}_{str_pad(rel_month_num, width=2, pad='0')}.xlsx")
+mcdatapath <-  glue("../ebird-datasets/EBD/ebd_IN_rel{currel_month_lab}-{currel_year}_{toupper(currel_month_lab)}.RData")
+mcresultspath <- glue("{currel_year}/MC_results_{currel_year}_{str_pad(currel_month_num, width=2, pad='0')}.xlsx")
 # each monthly challenge script different---the only thing that changes each time master script run
-mcpath <- glue("{rel_year}/MC_{rel_year}_{str_pad(rel_month_num, width=2, pad='0')}.R")
+mcpath <- glue("{currel_year}/MC_{currel_year}_{str_pad(currel_month_num, width=2, pad='0')}.R")
 
-ycdatapath <-  glue("../ebird-datasets/EBD/ebd_IN_rel{rel_month_lab}-{rel_year}_{rel_year}.RData")
-ycresultspath <- glue("{rel_year}/YC_results_{rel_year}.xlsx")
-ycpath <- glue("{rel_year}/YC_{rel_year}.R")
+ycdatapath <-  glue("../ebird-datasets/EBD/ebd_IN_rel{currel_month_lab}-{currel_year}_{currel_year}.RData")
+ycresultspath <- glue("{currel_year}/YC_results_{currel_year}.xlsx")
+ycpath <- glue("{currel_year}/YC_{currel_year}.R")
 
 # loading data ####
 
@@ -57,7 +39,7 @@ ycpath <- glue("{rel_year}/YC_{rel_year}.R")
 load(mcdatapath)
 
 # year's data for yearly challenge
-if (cur_month_num == 1) {
+if (real_month_num == 1) {
   load(ycdatapath)
 }
 
@@ -103,11 +85,11 @@ write_xlsx(x = tosave,
 
 # yearly stats (if January) ####
 
-if (cur_month_num == 1 & exists("data_yc")) {
+if (real_month_num == 1 & exists("data_yc")) {
   
   stats <- basic_stats(data_yc)
   
-} else if (cur_month_num == 1 & !exists("data_yc")) {
+} else if (real_month_num == 1 & !exists("data_yc")) {
   
   print("Yearly data needed but not loaded.")
   
@@ -115,7 +97,7 @@ if (cur_month_num == 1 & exists("data_yc")) {
 
 # yearly challenge winners/results ####
 
-if (cur_month_num == 1 & exists("data_yc")) {
+if (real_month_num == 1 & exists("data_yc")) {
   
   source(ycpath)
   
@@ -128,7 +110,7 @@ if (cur_month_num == 1 & exists("data_yc")) {
   
   
   # excel files separately
-  temp <- list.files(path = glue("{rel_year}/"),
+  temp <- list.files(path = glue("{currel_year}/"),
                      pattern = "MC_results_",
                      full.names = T)[9:12] %>% 
     map(~ read_xlsx(., sheet = 2)) %>% 
@@ -138,7 +120,7 @@ if (cur_month_num == 1 & exists("data_yc")) {
                              MONTH == 3 ~ 11,
                              MONTH == 4 ~ 12))
   
-  eBoY_r <- list.files(path = glue("{rel_year}/"),
+  eBoY_r <- list.files(path = glue("{currel_year}/"),
                        pattern = "MC_results_",
                        full.names = T)[1:8] %>% 
     lapply(read_csv) %>% 
@@ -165,7 +147,7 @@ if (cur_month_num == 1 & exists("data_yc")) {
 
 # saving results into excel sheet ####
 
-if (cur_month_num == 1 & exists("data_yc")) {
+if (real_month_num == 1 & exists("data_yc")) {
   
   write_xlsx(x = list("Yearly stats" = stats, 
                       "Prolific results" = prolific_r, 
