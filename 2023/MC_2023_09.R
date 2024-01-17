@@ -30,6 +30,21 @@ results <- data1 %>%
   anti_join(filtGA, by = "OBSERVER.ID")
 
 
+# bonus: Big Butterfly Month
+bonus <- data0 %>% 
+  # mention Big Butterfly Month 2023 in comments
+  filter(str_detect(TRIP.COMMENTS, 
+                    coll("Big Butterfly Month 2023", ignore_case = TRUE)),
+         # also link to observation
+         (str_detect(TRIP.COMMENTS, "inaturalist.org/") | 
+            str_detect(TRIP.COMMENTS, "indiabiodiversity.org/") |
+            str_detect(TRIP.COMMENTS, "ifoundbutterflies.org/"))) %>% 
+  group_by(OBSERVER.ID) %>% 
+  summarise(LISTS.WITH.BUTT.LINK = n_distinct(SAMPLING.EVENT.IDENTIFIER)) %>% 
+  left_join(eBird_users, by = "OBSERVER.ID") %>% 
+  anti_join(filtGA, by = "OBSERVER.ID")
+
+
 # random selection 
 a <- results %>% 
   filter(FULL.NAME != "MetalClicks Ajay Ashok") # removes NAs too
