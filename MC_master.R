@@ -102,31 +102,19 @@ if (real_month_num == 1 & exists("data_yc")) {
   source(ycpath)
   
   
-  ###### eBirder of the Year (eBirder of the Month >=8 months in 2021) ###
+  # eBirder of the Year (eBirder of the Month >=8 months in the year) ----------
   
   # selection of final excludes the category winners
   yc_cat_w <- bind_rows(prolific_w, consistent_w, adventurous_w, 
                         faithful_w, dedicated_w) 
   
   
-  # excel files separately
-  temp <- list.files(path = glue("{currel_year}/"),
-                     pattern = "MC_results_",
-                     full.names = T)[9:12] %>% 
-    map(~ read_xlsx(., sheet = 2)) %>% 
-    bind_rows(.id = "MONTH") %>% 
-    mutate(MONTH = case_when(MONTH == 1 ~ 9,
-                             MONTH == 2 ~ 10,
-                             MONTH == 3 ~ 11,
-                             MONTH == 4 ~ 12))
-  
   eBoY_r <- list.files(path = glue("{currel_year}/"),
                        pattern = "MC_results_",
-                       full.names = T)[1:8] %>% 
-    lapply(read_csv) %>% 
+                       full.names = TRUE) %>% 
+    map(~ read_xlsx(., sheet = 2)) %>% 
     bind_rows(.id = "MONTH") %>% 
     mutate(MONTH = as.numeric(MONTH)) %>% 
-    bind_rows(temp) %>% 
     group_by(OBSERVER.ID, FULL.NAME) %>% 
     summarise(NO.MONTHS = n_distinct(MONTH)) %>% 
     filter(NO.MONTHS >= 8) %>% 
@@ -138,10 +126,16 @@ if (real_month_num == 1 & exists("data_yc")) {
     # removing category winners
     anti_join(yc_cat_w) %>% 
     filter(FULL.NAME != "MetalClicks Ajay Ashok") # removes NAs too
-  set.seed(6)
+  set.seed(100)
   eBoY_w <- a %>% slice_sample(n = 1) %>% select(FULL.NAME)
-  print(glue("eBirder of the Year winner is {eBoY_w}"))
+  
+  eBoY_w_ann <- glue("eBirder of the Year winner is {eBoY_w}")
 
+  
+  winner_yc_announcement <- glue(
+    "{prolific_w_ann}\n{consistent_w_ann}\n{adventurous_w_ann}\n{faithful_w_ann}\n{dedicated_w_ann}\n\n{eBoY_w_ann}"
+  )
+  
   
 }
 
@@ -165,6 +159,11 @@ if (real_month_num == 1 & exists("data_yc")) {
              path = ycresultspath)
   
 }
+
 # announce (print) results in console -----------------------------------------------
 
 print(winner_mc_announcement)
+
+if (real_month_num == 1 & exists("winner_yc_announcement")) {
+  print(winner_yc_announcement)
+}
