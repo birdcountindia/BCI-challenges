@@ -44,7 +44,7 @@ consistent_r <- data1 %>%
 # random selection 
 a <- consistent_r %>% 
   filter(FULL.NAME != "MetalClicks Ajay Ashok") # removes NAs too
-set.seed(2)
+set.seed(1)
 consistent_w <- a %>% slice_sample(n = 1) %>% select(FULL.NAME)
 
 consistent_w_ann <- glue("Consistent challenge winner is {consistent_w}")
