@@ -86,18 +86,9 @@ source(mcpath)
 
 # saving results into excel sheet ####
 
-tosave <- if (exists("bonus")) {
-  list("Monthly stats" = stats, 
-       "Challenge results" = results,
-       "Challenge winner" = winner, 
-       "Bonus results" = bonus)
-} else {
-  list("Monthly stats" = stats, 
-       "Challenge results" = results, 
-       "Challenge winner" = winner)
-}
-
-write_xlsx(x = tosave,
+write_xlsx(x = list("Monthly stats" = stats, 
+                    "Challenge results" = results, 
+                    "Challenge winner" = winner),
            path = mcresultspath)
 
 
