@@ -1,14 +1,14 @@
 ###### load previous months data ###
 
-maindatapath <-  glue("../ebird-datasets/EBD/ebd_IN_rel{rel_month_lab}-{rel_year}.RData")
+maindatapath <-  glue("../ebird-datasets/EBD/ebd_IN_rel{currel_month_lab}-{currel_year}.RData")
 
 
 load(maindatapath)
 
 data_history <- data %>% 
   # prev three months (Dec to Feb)
-  filter(YEAR == (cur_year - 1) & MONTH == 12 |
-           YEAR == cur_year & (MONTH %in% 1:2))
+  filter(YEAR == (currel_year - 1) & MONTH == 12 |
+           YEAR == currel_year & (MONTH %in% 1:2))
 
 rm(data)
 
@@ -71,4 +71,5 @@ a <- results %>%
   filter(FULL.NAME != "MetalClicks Ajay Ashok") # removes NAs too
 set.seed(1)
 winner <- a %>% slice_sample(n = 1) %>% select(FULL.NAME)
-print(glue("Monthly challenge winner is {winner}"))
+
+winner_mc_announcement <- glue("Monthly challenge winner is {winner}")
