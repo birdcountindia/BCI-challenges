@@ -9,6 +9,8 @@ library(writexl) # to save results
 library(readxl)
 library(skimmr)
 
+source("MC_functions.R")
+
 # function to get summary stats
 source("https://raw.githubusercontent.com/birdcountindia/bci-functions/main/01_functions/summaries.R")
 
@@ -21,7 +23,7 @@ groupaccspath <- glue("../ebird-datasets/{groupaccspath}")
 senspath <- glue("../ebird-datasets/{senspath}")
 
 get_param()
-# get_param(date_currel = "2023-11-01")
+# get_param(date_currel = "2024-05-01")
 
 
 mcdatapath <-  glue("../ebird-datasets/EBD/ebd_IN_rel{currel_month_lab}-{currel_year}_{toupper(currel_month_lab)}.RData")
