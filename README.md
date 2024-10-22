@@ -1,0 +1,5 @@
+Bird Count India runs [monthly](https://birdcount.in/tag/ebird-monthly-challenge/) and [yearly](https://birdcount.in/tag/ebird-yearlong-challenge/) challenges to encourage greater birder participation. This repo is the codebase used to find all eBirders who qualified each challenge and to also randomly select one winner from them.
+
+The repo contains one master script that is run every time, and one functions script, both of which remain unchanged at each iteration. Only the specific criteria for each challenge change, and these are all individual R scripts saved in the corresponding year folder with appropriate file names. 
+
+In some cases, it is required to also download separate datasets. These are also saved (singly or in a subfolder) in the corresponding year folder following the same naming system. 
