@@ -9,7 +9,7 @@ library(writexl) # to save results
 library(readxl)
 library(skimmr)
 
-source("MC_functions.R")
+source("functions.R")
 
 # function to get summary stats
 source("https://raw.githubusercontent.com/birdcountindia/bci-functions/main/01_functions/summaries.R")
