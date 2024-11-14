@@ -8,6 +8,7 @@ sel_random_winner <- function(data_res, seed) {
   set.seed(seed)
   
   random_winner <- data_res %>% slice_sample(n = 1) %>% select(FULL.NAME)
+  return(random_winner)
   
 }
 
