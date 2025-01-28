@@ -13,12 +13,21 @@ data1 <- data0 %>%
   summarise(NO.LISTS = n_distinct(SAMPLING.EVENT.IDENTIFIER)) %>% 
   filter(NO.LISTS >= 30)
 
+# hotspots
+hotspots <- data0 %>% 
+  group_by(OBSERVER.ID) %>% 
+  filter(LOCALITY.TYPE == "H") %>% 
+  distinct(LOCALITY.ID, LOCALITY) %>% 
+  ungroup()
+
 # At least 4 lists from the same hotspot
 data2 <- data0 %>% 
-  filter(LOCALITY.TYPE == "H") %>% 
+  inner_join(hotspots, by = c("LOCALITY", "LOCALITY.ID", "OBSERVER.ID")) %>% 
   group_by(OBSERVER.ID, LOCALITY.ID) %>% 
   summarise(HOT.LISTS = n_distinct(SAMPLING.EVENT.IDENTIFIER)) %>% 
-  filter(HOT.LISTS >= 4)
+  filter(HOT.LISTS >= 4) %>% 
+  summarise(NO.HOT = n_distinct(LOCALITY.ID)) %>% 
+  filter(NO.HOT >= 1)
 
 results <- data1 %>% 
   inner_join(data2, by = "OBSERVER.ID") %>% 
