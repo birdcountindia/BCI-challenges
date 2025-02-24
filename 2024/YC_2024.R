@@ -23,7 +23,7 @@ prolific_r <- data1 %>%
 # random selection 
 a <- prolific_r %>% 
   filter(!is.na(FULL.NAME)) # removes NAs
-set.seed(1)
+set.seed(2)
 prolific_w <- a %>% slice_sample(n = 1) %>% select(FULL.NAME)
 
 prolific_w_ann <- glue("Prolific challenge winner is {prolific_w}")
@@ -44,7 +44,7 @@ consistent_r <- data1 %>%
 # random selection 
 a <- consistent_r %>% 
   filter(!is.na(FULL.NAME)) # removes NAs
-set.seed(1)
+set.seed(5)
 consistent_w <- a %>% slice_sample(n = 1) %>% select(FULL.NAME)
 
 consistent_w_ann <- glue("Consistent challenge winner is {consistent_w}")
