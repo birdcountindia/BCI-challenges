@@ -1,4 +1,4 @@
-###### monthly challenge winners/results for December 2024 ###
+###### monthly challenge winners/results for February 2025 ###
 
 # basic eligible list filter
 data0 <- data_mc %>% 
