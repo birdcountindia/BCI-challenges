@@ -8,7 +8,6 @@ library(glue)
 library(writexl) # to save results
 library(readxl)
 library(skimmr)
-
 source("functions.R")
 
 # function to get summary stats
@@ -22,8 +21,8 @@ userspath <- glue("../ebird-datasets/{userspath}")
 groupaccspath <- glue("../ebird-datasets/{groupaccspath}")
 senspath <- glue("../ebird-datasets/{senspath}")
 
-get_param()
-# get_param(date_currel = "2024-05-01")
+ebird_rel_param() # In newer edition of skimmr package, it's ebird_rel_param()
+# ebird_rel_param(date_currel = "2024-12-01")
 
 
 mcdatapath <-  glue("../ebird-datasets/EBD/ebd_IN_rel{currel_month_lab}-{currel_year}_{toupper(currel_month_lab)}.RData")
@@ -155,7 +154,9 @@ if (real_month_num == 1 & exists("data_yc")) {
                       "Faithful results" = faithful_r, 
                       "Faithful winner" = faithful_w, 
                       "Dedicated results" = dedicated_r, 
-                      "Dedicated winner" = dedicated_w, 
+                      "Dedicated winner" = dedicated_w,
+                      "Exploratory results" = exploratory_r,
+                      "Exploratory winner" = exploratory_w,
                       "eBoY results" = eBoY_r, 
                       "eBoY winner" = eBoY_w),
              path = ycresultspath)
