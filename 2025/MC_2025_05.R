@@ -14,11 +14,10 @@ data1 <- data0 %>%
   filter(NO.LISTS >= 20)
 # observers with more than one location get advantage in random selection
 
-
 results <- data1 %>% 
   left_join(eBird_users, by = "OBSERVER.ID") %>% 
   anti_join(filtGA, by = "OBSERVER.ID")
 
 # random selection
-winner <- sel_random_winner(results, seed = 123)
+winner <- sel_random_winner(results, seed = 1)
 winner_mc_announcement <- glue("Monthly challenge winner is {winner}")

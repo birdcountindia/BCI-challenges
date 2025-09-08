@@ -5,9 +5,8 @@ media_csv_names <- list.files(path = glue("{currel_year}/MC_{currel_year}_{str_p
   lapply(read.csv) %>% 
   bind_rows() %>% 
   dplyr::select(contains("ML.Catalog.Number"), 
-                Recordist, eBird.Checklist.ID, Number.of.Ratings) %>% 
-  magrittr::set_colnames(c("ML.ID", "FULL.NAME", "SAMPLING.EVENT.IDENTIFIER", "RATINGS")) %>% 
-  distinct(ML.ID, FULL.NAME, SAMPLING.EVENT.IDENTIFIER, RATINGS)
+                Recordist, eBird.Checklist.ID, Number.of.Ratings, Common.Name) %>% 
+  magrittr::set_colnames(c("ML.ID", "FULL.NAME", "SAMPLING.EVENT.IDENTIFIER", "RATINGS", "COMMON.NAME"))
 
 ###### monthly challenge winners/results ###
 
@@ -26,9 +25,8 @@ data1 <- data0 %>%
 
 # qualifying checklists with 10+ rated media covering 5+ species
 data2 <- data0 %>%
-  inner_join(media_csv_names, by = "SAMPLING.EVENT.IDENTIFIER") %>%
-  filter(YEAR == currel_year, MONTH == currel_month_num, RATINGS >= 1) %>%
-  group_by(SAMPLING.EVENT.IDENTIFIER) %>%
+  inner_join(media_csv_names, by = c("SAMPLING.EVENT.IDENTIFIER", "COMMON.NAME"), relationship = "many-to-many") %>%
+  group_by(OBSERVER.ID) %>%
   mutate(SPECIES.MEDIA.COUNT = n_distinct(COMMON.NAME),
          TOTAL.MEDIA = n_distinct(ML.ID)) %>%
   ungroup() %>%
@@ -38,9 +36,10 @@ data2 <- data0 %>%
 
 results <- data1 %>% 
   inner_join(data2, by = "OBSERVER.ID") %>% 
+  select(-FULL.NAME) %>%  # drop conflicting FULL.NAME before final join
   left_join(eBird_users, by = "OBSERVER.ID") %>% 
   anti_join(filtGA, by = "OBSERVER.ID")
 
 # random selection
-winner <- sel_random_winner(results, seed = 123)
+winner <- sel_random_winner(results, seed = 6)
 winner_mc_announcement <- glue("Monthly challenge winner is {winner}")

@@ -35,5 +35,5 @@ results <- data1 %>%
   anti_join(filtGA, by = "OBSERVER.ID")
 
 # random selection
-winner <- sel_random_winner(results, seed = 123)
+winner <- sel_random_winner(results, seed = 18)
 winner_mc_announcement <- glue("Monthly challenge winner is {winner}")

@@ -67,7 +67,7 @@ adventurous_r <- data1 %>%
 # random selection 
 a <- adventurous_r %>% 
   filter(!is.na(FULL.NAME)) # removes NAs
-set.seed(35)
+set.seed(34)
 adventurous_w <- a %>% slice_sample(n = 1) %>% select(FULL.NAME)
 
 adventurous_w_ann <- glue("Adventurous challenge winner is {adventurous_w}")
@@ -124,7 +124,7 @@ dedicated_w_ann <- glue("Dedicated challenge winner is {dedicated_w}")
 
 # Exploratory eBirder (>=5 eligible lists from >=5 districts with <1000) ------------------------------
 
-datax <- read_xlsx("../dark-loci/outputs/2023/concern_classification_rel-202311.xlsx") %>% 
+datax <- read_xlsx("../dark-loci/outputs/2023/concern_classification_rel-202312.xlsx") %>% 
   filter(YEAR == 2023, MONTH == 12)
 
 dists_to_explore <- datax %>% 
@@ -149,7 +149,7 @@ exploratory_r <- data1 %>%
 # random selection 
 a <- exploratory_r %>% 
   filter(!is.na(FULL.NAME)) # removes NAs
-set.seed(35)
+set.seed(34)
 exploratory_w <- a %>% slice_sample(n = 1) %>% select(FULL.NAME)
 
 exploratory_w_ann <- glue("Exploratory challenge winner is {exploratory_w}")
